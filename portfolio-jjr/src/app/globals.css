@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f0e8;
-  --foreground: #111a16;
+  --background: #FFFFFF;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -37,8 +37,8 @@ button {
 }
 
 ::selection {
-  background: #111a16;
-  color: #f4f0e8;
+  background: #000000;
+  color: #FFFFFF;
 }
 
 .visual-grid {
@@ -60,7 +60,7 @@ button {
   top: 18%;
   width: 18rem;
   height: 18rem;
-  background: radial-gradient(circle, rgba(220, 166, 107, 0.2), transparent 68%);
+  background: radial-gradient(circle, rgba(252, 163, 17, 0.2), transparent 68%);
 }
 
 .hero-orb-right {
@@ -68,7 +68,7 @@ button {
   bottom: 5%;
   width: 26rem;
   height: 26rem;
-  background: radial-gradient(circle, rgba(119, 160, 130, 0.23), transparent 68%);
+  background: radial-gradient(circle, rgba(20, 33, 61, 0.23), transparent 68%);
 }
 
 @media (max-width: 1023px) {
