@@ -22,11 +22,13 @@ export default function Home() {
       setScrolled(window.scrollY > 24);
 
       let current = "home";
+      const middle = window.innerHeight / 2;
       sections.forEach((section) => {
         const node = document.getElementById(section.id);
         if (node) {
-          const top = node.getBoundingClientRect().top;
-          if (top <= 96) {
+          const rect = node.getBoundingClientRect();
+          // Marca la sección como activa si cubre el punto medio del viewport
+          if (rect.top <= middle && rect.bottom >= middle) {
             current = section.id;
           }
         }
