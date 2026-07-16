@@ -576,15 +576,16 @@ export default function PortfolioExperience() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const sectionAtReadingLine = entries.find((entry) => entry.isIntersecting);
 
-        if (visible) {
-          setActiveSection(visible.target.id);
+        if (sectionAtReadingLine) {
+          setActiveSection(sectionAtReadingLine.target.id);
         }
       },
-      { threshold: [0.35, 0.55, 0.7] },
+      {
+        rootMargin: "-42% 0px -52% 0px",
+        threshold: 0,
+      },
     );
 
     sectionIds.forEach((id) => {

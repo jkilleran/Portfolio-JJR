@@ -18,7 +18,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
+  scroll-padding-top: 5rem;
   background: var(--background);
 }
 
@@ -26,6 +26,8 @@ body {
   min-width: 320px;
   margin: 0;
   overflow-x: hidden;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -34,6 +36,10 @@ body {
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 ::selection {
@@ -71,16 +77,9 @@ button {
   background: radial-gradient(circle, rgba(119, 160, 130, 0.23), transparent 68%);
 }
 
-@media (max-width: 1023px) {
-  html {
-    scroll-snap-type: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-    scroll-snap-type: none;
   }
 
   *,
