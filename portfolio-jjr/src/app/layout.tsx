@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio JJR",
-  description: "Portafolio minimalista con secciones que se revelan al hacer scroll.",
+  title: "JJR Studio | Software que convierte ideas en soluciones",
+  description:
+    "Diseñamos y desarrollamos productos digitales confiables, rápidos y accesibles para convertir ideas en soluciones reales.",
 };
 
 export default function RootLayout({
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
