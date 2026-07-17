@@ -310,6 +310,10 @@ function SiteHeader({
         <div className="flex items-center gap-3">
           <a
             href="#contact"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection("contact");
+            }}
             className="hidden items-center gap-2 rounded-full bg-[#111a16] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#111a16]/10 transition hover:-translate-y-0.5 hover:bg-[#26372e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5c7c67] focus-visible:ring-offset-4 sm:inline-flex"
           >
             Hablemos
@@ -694,6 +698,10 @@ export default function PortfolioExperience() {
               <motion.div variants={revealItem} className="mt-9 flex flex-wrap gap-3">
                 <a
                   href="#projects"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection("projects");
+                  }}
                   className="group inline-flex items-center gap-3 rounded-full bg-[#111a16] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#111a16]/15 transition hover:-translate-y-1 hover:bg-[#283b31] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5c7c67] focus-visible:ring-offset-4"
                 >
                   Ver nuestros proyectos
