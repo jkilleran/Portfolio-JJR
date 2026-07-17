@@ -93,6 +93,28 @@ function ArrowIcon() {
   );
 }
 
+function scrollToSection(id: string) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  const header = document.querySelector("header");
+  const headerHeight = header?.getBoundingClientRect().height ?? 80;
+  // For the about section we want the section's top to align
+  // exactly below the header so it occupies the full viewport
+  // (no other section visible). Use the element's offsetTop
+  // to get a stable position and subtract the header height.
+  let targetScroll = Math.max(
+    0,
+    element.getBoundingClientRect().top + window.pageYOffset - headerHeight,
+  );
+
+  if (id === "about") {
+    targetScroll = Math.max(0, Math.round((element as HTMLElement).offsetTop - headerHeight));
+  }
+
+  window.scrollTo({ top: targetScroll, behavior: "smooth" });
+}
+
 function ProjectVisual({ index, large = false }: { index: number; large?: boolean }) {
   return (
     <div
@@ -263,11 +285,10 @@ function SiteHeader({
             <a
               key={item.id}
               href={`#${item.id}`}
-              className={`group relative py-2 text-sm font-semibold transition-colors ${
-                activeSection === item.id
-                  ? "text-[#111a16]"
-                  : "text-[#5e6962] hover:text-[#111a16]"
-              }`}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection(item.id);
+              }}
             >
               {item.label}
               <span
@@ -336,7 +357,11 @@ function SiteHeader({
             <a
               key={item.id}
               href={`#${item.id}`}
-              onClick={() => setMenuOpen(false)}
+              onClick={(event) => {
+                event.preventDefault();
+                setMenuOpen(false);
+                scrollToSection(item.id);
+              }}
               className="rounded-2xl px-4 py-3 text-base font-semibold text-[#26372e] transition hover:bg-white/80"
             >
               {item.label}
@@ -673,6 +698,10 @@ export default function PortfolioExperience() {
                 </a>
                 <a
                   href="#about"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection("about");
+                  }}
                   className="inline-flex items-center rounded-full border border-[#111a16]/15 bg-white/50 px-6 py-3.5 text-sm font-bold text-[#26372e] backdrop-blur transition hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5c7c67] focus-visible:ring-offset-4"
                 >
                   Conócenos
@@ -682,6 +711,10 @@ export default function PortfolioExperience() {
               <motion.a
                 variants={revealItem}
                 href="#about"
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection("about");
+                }}
                 className="mt-12 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-[#6b786f] transition hover:text-[#111a16]"
               >
                 <span className="grid h-9 w-6 place-items-start rounded-full border border-[#111a16]/20 p-1.5">
