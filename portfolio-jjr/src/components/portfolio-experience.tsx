@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navigation = [
   { id: "about", label: "Quiénes somos" },
@@ -475,7 +475,7 @@ function HeroVisual({ reduceMotion }: { reduceMotion: boolean }) {
 
         <motion.div
           animate={reduceMotion ? undefined : { x: [0, 8, 0], y: [0, -4, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-5 left-5 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-xl sm:bottom-7 sm:left-7"
         >
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/45">
@@ -560,11 +560,24 @@ export default function PortfolioExperience() {
   const reduceMotion = useReducedMotion() ?? false;
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 850], [0, 95]);
+  const scrollToProjectDetail = useRef(false);
   const activeProject = projects[selectedProject];
 
   const moveProject = (direction: number) => {
     setSelectedProject((current) => (current + direction + projects.length) % projects.length);
   };
+
+  useEffect(() => {
+    if (scrollToProjectDetail.current) {
+      const supportElement = document.getElementById("support");
+      if (supportElement) {
+        const supportTop = supportElement.getBoundingClientRect().top + window.pageYOffset;
+        const targetScroll = Math.max(0, supportTop - window.innerHeight + 1);
+        window.scrollTo({ top: targetScroll, behavior: "smooth" });
+      }
+      scrollToProjectDetail.current = false;
+    }
+  }, [selectedProject]);
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 20);
@@ -790,7 +803,10 @@ export default function PortfolioExperience() {
                   key={project.title}
                   type="button"
                   aria-pressed={selectedProject === index}
-                  onClick={() => setSelectedProject(index)}
+                  onClick={() => {
+                    scrollToProjectDetail.current = true;
+                    setSelectedProject(index);
+                  }}
                   initial={{ opacity: 0, y: 52, scale: 0.96 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   whileHover={reduceMotion ? undefined : { y: -9, scale: 1.012 }}
@@ -801,12 +817,12 @@ export default function PortfolioExperience() {
                     delay: index * 0.09,
                     ease: "easeOut",
                   }}
-                  className="group relative rounded-[2.1rem] border border-[#111a16]/10 bg-white/45 p-3 text-left outline-none transition-shadow hover:shadow-[0_30px_70px_rgba(17,26,22,0.13)] focus-visible:ring-2 focus-visible:ring-[#77a082] focus-visible:ring-offset-4 focus-visible:ring-offset-[#e9e5dc]"
+                  className="group relative rounded-[2.1rem] border border-[#111a16]/10 bg-white/45 p-3 text-left outline-none transition-shadow hover:shadow-[0_30px_70px_rgba(17,26,22,0.13)]"
                 >
                   {selectedProject === index && (
                     <motion.span
                       layoutId="selected-project"
-                      className="absolute inset-0 rounded-[2.1rem] border-2 border-[#77a082]"
+                      className="absolute inset-0 rounded-[2.1rem] border-2 border-transparent"
                       transition={{ type: "spring", stiffness: 140, damping: 22 }}
                     />
                   )}
@@ -829,6 +845,7 @@ export default function PortfolioExperience() {
             <div className="mt-16 border-t border-[#111a16]/10 pt-12">
               <AnimatePresence mode="wait">
                 <motion.article
+                  id="selected-project-detail"
                   key={activeProject.number}
                   initial={{ opacity: 0, y: 36, filter: "blur(10px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
