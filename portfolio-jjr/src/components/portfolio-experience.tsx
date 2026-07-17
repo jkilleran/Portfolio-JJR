@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navigation = [
   { id: "about", label: "Quiénes somos" },
@@ -91,6 +91,28 @@ function ArrowIcon() {
       <path d="M5 12h13M13 6l6 6-6 6" />
     </svg>
   );
+}
+
+function scrollToSection(id: string) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  const header = document.querySelector("header");
+  const headerHeight = header?.getBoundingClientRect().height ?? 80;
+  // For the about section we want the section's top to align
+  // exactly below the header so it occupies the full viewport
+  // (no other section visible). Use the element's offsetTop
+  // to get a stable position and subtract the header height.
+  let targetScroll = Math.max(
+    0,
+    element.getBoundingClientRect().top + window.pageYOffset - headerHeight,
+  );
+
+  if (id === "about") {
+    targetScroll = Math.max(0, Math.round((element as HTMLElement).offsetTop - headerHeight));
+  }
+
+  window.scrollTo({ top: targetScroll, behavior: "smooth" });
 }
 
 function ProjectVisual({ index, large = false }: { index: number; large?: boolean }) {
@@ -263,11 +285,10 @@ function SiteHeader({
             <a
               key={item.id}
               href={`#${item.id}`}
-              className={`group relative py-2 text-sm font-semibold transition-colors ${
-                activeSection === item.id
-                  ? "text-[#111a16]"
-                  : "text-[#5e6962] hover:text-[#111a16]"
-              }`}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection(item.id);
+              }}
             >
               {item.label}
               <span
@@ -336,7 +357,11 @@ function SiteHeader({
             <a
               key={item.id}
               href={`#${item.id}`}
-              onClick={() => setMenuOpen(false)}
+              onClick={(event) => {
+                event.preventDefault();
+                setMenuOpen(false);
+                scrollToSection(item.id);
+              }}
               className="rounded-2xl px-4 py-3 text-base font-semibold text-[#26372e] transition hover:bg-white/80"
             >
               {item.label}
@@ -475,7 +500,7 @@ function HeroVisual({ reduceMotion }: { reduceMotion: boolean }) {
 
         <motion.div
           animate={reduceMotion ? undefined : { x: [0, 8, 0], y: [0, -4, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-5 left-5 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-xl sm:bottom-7 sm:left-7"
         >
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/45">
@@ -560,11 +585,24 @@ export default function PortfolioExperience() {
   const reduceMotion = useReducedMotion() ?? false;
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 850], [0, 95]);
+  const scrollToProjectDetail = useRef(false);
   const activeProject = projects[selectedProject];
 
   const moveProject = (direction: number) => {
     setSelectedProject((current) => (current + direction + projects.length) % projects.length);
   };
+
+  useEffect(() => {
+    if (scrollToProjectDetail.current) {
+      const supportElement = document.getElementById("support");
+      if (supportElement) {
+        const supportTop = supportElement.getBoundingClientRect().top + window.pageYOffset;
+        const targetScroll = Math.max(0, supportTop - window.innerHeight + 1);
+        window.scrollTo({ top: targetScroll, behavior: "smooth" });
+      }
+      scrollToProjectDetail.current = false;
+    }
+  }, [selectedProject]);
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 20);
@@ -660,6 +698,10 @@ export default function PortfolioExperience() {
                 </a>
                 <a
                   href="#about"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection("about");
+                  }}
                   className="inline-flex items-center rounded-full border border-[#111a16]/15 bg-white/50 px-6 py-3.5 text-sm font-bold text-[#26372e] backdrop-blur transition hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5c7c67] focus-visible:ring-offset-4"
                 >
                   Conócenos
@@ -669,6 +711,10 @@ export default function PortfolioExperience() {
               <motion.a
                 variants={revealItem}
                 href="#about"
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection("about");
+                }}
                 className="mt-12 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-[#6b786f] transition hover:text-[#111a16]"
               >
                 <span className="grid h-9 w-6 place-items-start rounded-full border border-[#111a16]/20 p-1.5">
@@ -790,7 +836,10 @@ export default function PortfolioExperience() {
                   key={project.title}
                   type="button"
                   aria-pressed={selectedProject === index}
-                  onClick={() => setSelectedProject(index)}
+                  onClick={() => {
+                    scrollToProjectDetail.current = true;
+                    setSelectedProject(index);
+                  }}
                   initial={{ opacity: 0, y: 52, scale: 0.96 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   whileHover={reduceMotion ? undefined : { y: -9, scale: 1.012 }}
@@ -801,12 +850,12 @@ export default function PortfolioExperience() {
                     delay: index * 0.09,
                     ease: "easeOut",
                   }}
-                  className="group relative rounded-[2.1rem] border border-[#111a16]/10 bg-white/45 p-3 text-left outline-none transition-shadow hover:shadow-[0_30px_70px_rgba(17,26,22,0.13)] focus-visible:ring-2 focus-visible:ring-[#77a082] focus-visible:ring-offset-4 focus-visible:ring-offset-[#e9e5dc]"
+                  className="group relative rounded-[2.1rem] border border-[#111a16]/10 bg-white/45 p-3 text-left outline-none transition-shadow hover:shadow-[0_30px_70px_rgba(17,26,22,0.13)]"
                 >
                   {selectedProject === index && (
                     <motion.span
                       layoutId="selected-project"
-                      className="absolute inset-0 rounded-[2.1rem] border-2 border-[#77a082]"
+                      className="absolute inset-0 rounded-[2.1rem] border-2 border-transparent"
                       transition={{ type: "spring", stiffness: 140, damping: 22 }}
                     />
                   )}
@@ -829,6 +878,7 @@ export default function PortfolioExperience() {
             <div className="mt-16 border-t border-[#111a16]/10 pt-12">
               <AnimatePresence mode="wait">
                 <motion.article
+                  id="selected-project-detail"
                   key={activeProject.number}
                   initial={{ opacity: 0, y: 36, filter: "blur(10px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
