@@ -694,6 +694,10 @@ export default function PortfolioExperience() {
               <motion.div variants={revealItem} className="mt-9 flex flex-wrap gap-3">
                 <a
                   href="#projects"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection("projects");
+                  }}
                   className="group inline-flex items-center gap-3 rounded-full bg-[#111a16] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#111a16]/15 transition hover:-translate-y-1 hover:bg-[#283b31] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5c7c67] focus-visible:ring-offset-4"
                 >
                   Ver nuestros proyectos
