@@ -289,6 +289,11 @@ function SiteHeader({
                 event.preventDefault();
                 scrollToSection(item.id);
               }}
+              className={`group relative py-2 text-sm font-semibold transition-colors ${
+                activeSection === item.id
+                  ? "text-[#111a16]"
+                  : "text-[#5e6962] hover:text-[#111a16]"
+              }`}
             >
               {item.label}
               <span
