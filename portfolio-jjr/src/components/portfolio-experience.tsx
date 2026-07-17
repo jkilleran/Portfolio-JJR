@@ -1045,11 +1045,17 @@ export default function PortfolioExperience() {
                 href="#project-form"
                 whileHover={reduceMotion ? undefined : { y: -8, rotate: -1 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
+                animate={reduceMotion ? undefined : { y: [0, -8] }}
                 transition={{
-                  y: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
+                  y: {
+                    duration: 8,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: "easeInOut",
+                  },
                   default: { type: "spring", stiffness: 120, damping: 18 },
                 }}
+                style={{ willChange: "transform", transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
                 className="group relative flex min-h-64 flex-col justify-between overflow-hidden rounded-[2.25rem] bg-[#111a16] p-7 text-white shadow-[0_30px_70px_rgba(17,26,22,0.18)] outline-none focus-visible:ring-2 focus-visible:ring-[#77a082] focus-visible:ring-offset-4"
               >
                 <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#77a082]/30 blur-3xl" />
